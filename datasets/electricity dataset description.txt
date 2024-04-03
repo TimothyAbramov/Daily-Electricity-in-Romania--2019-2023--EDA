@@ -1,0 +1,35 @@
+source: https://data.world/stefancomanita/daily-electricity-consumption-and-production/workspace/project-summary?agentid=stefancomanita&datasetid=daily-electricity-consumption-and-production
+
+Detailed Description
+
+This dataset offers a detailed account of daily electricity consumption and production, along with the specific contribution of various energy sources. It is an essential resource for understanding energy dynamics, assessing the balance between consumption and production, and evaluating the role of different energy sources in the electricity grid.
+
+Daily timeseries of electricity consumption and production (with production type) in Romania. It includes the hourly consumption and production, and the production is split in one of the categories: Nuclear, Wind, Hydroelectric, Oil and Gas, Coal, Solar, Biomass. I think this is a nice dataset due to the fact that Romania includes broad spectrum of electricity productions, including quite a lot of solar and wind, but also nuclear! It's a pretty big data set of more than 4 years! When the production is greater than the consumption it means we are exporting electricity, when the value is smaller it means we are importing electricity.
+
+All values are in MWs
+
+Daily timeseries of electricity consumption and production (with production type) in Romania.It includes the hourly consumption and production, and the production is split in one of the categories: Nuclear, Wind, Hydroelectric, Oil and Gas, Coal, Solar, Biomass.categories: Nuclear, Wind, Hydroelectric, Oil and Gas, Coal, Solar, Biomass.
+
+Daily timeseries of electricity consumption and production (with production type) in Romania. It includes the hourly consumption and production, and the production is split in one of the categories: Nuclear, Wind, Hydroelectric, Oil and Gas, Coal, Solar, Biomass.I think this is a nice dataset due to the fact that Romania includes broad spectrum of electricity productions, including quite a lot of solar and wind, but also nuclear!
+
+Daily timeseries of electricity consumption and production (with production type) in Romania. It includes the hourly consumption and production, and the production is split in one of the categories: Nuclear, Wind, Hydroelectric, Oil and Gas, Coal, Solar, Biomass. I think this is a nice dataset due to the fact that Romania includes broad spectrum of electricity productions, including quite a lot of solar and wind, but also nuclear!It's a pretty big data set of more than 4 years!
+
+Daily timeseries of electricity consumption and production (with production type) in Romania. It includes the hourly consumption and production, and the production is split in one of the categories: Nuclear, Wind, Hydroelectric, Oil and Gas, Coal, Solar, Biomass. I think this is a nice dataset due to the fact that Romania includes broad spectrum of electricity productions, including quite a lot of solar and wind, but also nuclear! It's a pretty big data set of more than 4 years!When the production is greater than the consumption it means we are exporting electricity, when the value is smaller it means we are importing electricity.
+
+Daily timeseries of electricity consumption and production (with production type) in Romania. It includes the hourly consumption and production, and the production is split in one of the categories: Nuclear, Wind, Hydroelectric, Oil and Gas, Coal, Solar, Biomass. I think this is a nice dataset due to the fact that Romania includes broad spectrum of electricity productions, including quite a lot of solar and wind, but also nuclear! It's a pretty big data set of more than 4 years! When the production is greater than the consumption it means we are exporting electricity, when the value is smaller it means we are importing electricity.All values are in MWs
+
+Data Structure
+
+.DateTime: The date for each data entry, formatted asYYYY-MM-DD
+Consumption: Total electricity consumption for the day, presumably in kilowatt-hours (kWh).
+Production: Total electricity produced on the same day, also likely in kWh.
+Nuclear, Wind, Hydroelectric, Oil and Gas, Coal, Solar, Biomass: Breakdown of daily electricity production by these energy sources, providing insights into the energy mix and its variability over time.
+Timeframe
+
+The dataset covers a period starting from January 1, 2019, but the end date is not specified in the initial view. The complete timeframe should be assessed for a full understanding.
+Applications
+
+Energy Sector Analysis: The dataset is invaluable for analyzing trends in energy demand and supply, and understanding the reliance on different energy sources.
+Environmental Studies: Assessing the environmental impact of electricity production, particularly focusing on renewable vs. non-renewable sources.
+Policy Making: Informing energy policy, especially in terms of energy independence, sustainability, and climate change mitigation.
+Economic Analysis: Understanding the correlation between economic activities, energy consumption, and production patterns.
