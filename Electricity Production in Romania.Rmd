@@ -12,7 +12,8 @@ library(tidyverse)
 setwd("/Users/home/Downloads/5. Github Public Repos/Daily-Electricity-in-Romania--2019-2023--EDA")
 romaniaElectricity <- read.csv("datasets/daily_electricity_data.csv")
 romaniaElectricity <- romaniaElectricity %>%
-  mutate(DateTime = as.Date(DateTime))
+  mutate(DateTime = as.Date(DateTime)) %>%
+  filter(DateTime < "2023-01-01")
 ```
 
 ```{r}
@@ -35,7 +36,6 @@ str(romaniaElectricity)
 #graph1 production by year
 
 productionByYear <- romaniaElectricity %>%
-  filter(DateTime < "2023-01-01") %>%
   mutate(Year = format(DateTime, "%Y")) %>%
   group_by(Year) %>%
   mutate(Total_Consumption = sum(Consumption),
@@ -71,8 +71,15 @@ ggplot(productionByYear, aes(x = Year, y = Technology_Production, fill = Technol
 #graph2 net electricity
 netElectricity <- romaniaElectricity %>%
   select(DateTime, Production, Consumption) %>%
-  mutate(NetProduction = Production - Consumption)
+  mutate(NetProduction = Production - Consumption,
+         Exporting = NetProduction > 0) %>%
+  select(DateTime, NetProduction, Exporting) %>%
+  mutate(Exporting = factor(Exporting, levels = c("TRUE", "FALSE")))
 
+
+ggplot(netElectricity, aes(x = DateTime, y = NetProduction, color = Exporting)) + 
+  geom_col() +
+  labs(title = "Net Electricity Production in Romania (2019-2022)")
 ```
 
 ```{r}
