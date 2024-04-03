@@ -1,0 +1,54 @@
+---
+title: "Electricity Production in Romania"
+output: html_document
+date: '`r Sys.Date()`'
+---
+
+```{r}
+#initial setup & files
+library(tidyverse)
+
+setwd("/Users/home/Downloads/5. Github Public Repos/Daily-Electricity-in-Romania--2019-2023--EDA")
+romaniaElectricity <- read.csv("datasets/daily_electricity_data.csv")
+romaniaElectricity <- romaniaElectricity %>%
+  mutate(DateTime = as.Date(DateTime))
+```
+
+```{r}
+#Types of potential graphs:
+#-mean electricity production by technology type (transform the data to get categorical var)
+#-timeseries plot of net electricity production (if negative - country is importing elecricity, if positive - exporting)
+#-timeseries plot of total electricity production (smoothed trend line + bars of actual values)
+#
+```
+
+```{r}
+#exploring the data a little bit
+head(romaniaElectricity)
+str(romaniaElectricity) 
+#DateTime needs to be a date var
+#also need to take individual columns with different electricity production tech into two columns: tech and production_num
+```
+
+
+```{r}
+#graph1 total production over time
+
+ggplot(romaniaElectricity, aes(x = DateTime, y = Production)) + 
+  geom_bar(stat = "identity") + 
+  geom_smooth()
+```
+
+```{r}
+#graph2 net electricity
+netElectricity <- romaniaElectricity %>%
+  select(DateTime, Production, Consumption) %>%
+  mutate(NetProduction = Production - Consumption)
+
+```
+
+```{r}
+#graph3 mean production by technology
+```
+
+
