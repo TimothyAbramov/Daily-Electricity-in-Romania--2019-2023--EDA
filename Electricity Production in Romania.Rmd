@@ -6,6 +6,7 @@ date: '`r Sys.Date()`'
 
 ```{r}
 #initial setup & files
+library(plyr)
 library(reshape2)
 library(tidyverse)
 
@@ -84,6 +85,29 @@ ggplot(netElectricity, aes(x = DateTime, y = NetProduction, color = Exporting)) 
 
 ```{r}
 #graph3 mean production by technology
+productionByTechnology <- productionByYear %>%
+  group_by(Technology) %>%
+  summarise(Mean_Technology_Production = mean(Technology_Production))
+
+#renaming the levels in the factor
+productionByTechnology$Technology <- revalue(productionByTechnology$Technology,
+                                             c("Total_Nuclear" = "Nuclear",
+                                               "Total_Wind" = "Wind",
+                                               "Total_Hydroelectric" = "Hydroelectric",
+                                               "Total_OilAndGas" = "Oil and Gas",
+                                               "Total_Coal" = "Coal",
+                                               "Total_Solar" = "Solar",
+                                               "Total_Biomass" = "Biomass"))
+
+#sorting the levels in factor
+
+
+ggplot(productionByTechnology, aes(x = Mean_Technology_Production, y = fct_reorder(Technology, Mean_Technology_Production))) +
+  geom_bar(stat = "identity") +
+  labs(title = "Mean Electricity Production by Technology in Romania (2019-2022)",
+       subtitle = "source: data.world",
+       x = "Production (MWh)",
+       y = "")
 ```
 
 
