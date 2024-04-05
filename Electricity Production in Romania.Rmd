@@ -6,6 +6,8 @@ date: '`r Sys.Date()`'
 
 ```{r}
 #initial setup & files
+library(hrbrthemes)
+library(viridis)
 library(plyr)
 library(reshape2)
 library(tidyverse)
@@ -84,30 +86,51 @@ ggplot(netElectricity, aes(x = DateTime, y = NetProduction, color = Exporting)) 
 ```
 
 ```{r}
-#graph3 mean production by technology
-productionByTechnology <- productionByYear %>%
+#graph3 production by technology
+productionByTechnology <- melt(romaniaElectricity,
+                               id.vars = c("DateTime", "Consumption", "Production"),
+                               variable.name = "Technology",
+                               value.name = "Technology_Production") %>%
+  mutate(Technology_Production = Technology_Production / 1000) %>% #transform to GWh
+  arrange(DateTime) %>%
   group_by(Technology) %>%
-  summarise(Mean_Technology_Production = mean(Technology_Production))
+  mutate(Median_Production = median(Technology_Production)) %>%
+  ungroup()
 
-#renaming the levels in the factor
+#changing one of the levels
 productionByTechnology$Technology <- revalue(productionByTechnology$Technology,
-                                             c("Total_Nuclear" = "Nuclear",
-                                               "Total_Wind" = "Wind",
-                                               "Total_Hydroelectric" = "Hydroelectric",
-                                               "Total_OilAndGas" = "Oil and Gas",
-                                               "Total_Coal" = "Coal",
-                                               "Total_Solar" = "Solar",
-                                               "Total_Biomass" = "Biomass"))
+                                             c("Oil.and.Gas" = "Oil and Gas"))
 
 #sorting the levels in factor
+productionByTechnology$Technology <- fct_reorder(productionByTechnology$Technology, productionByTechnology$Median_Production)
 
-
-ggplot(productionByTechnology, aes(x = Mean_Technology_Production, y = fct_reorder(Technology, Mean_Technology_Production))) +
-  geom_bar(stat = "identity") +
-  labs(title = "Mean Electricity Production by Technology in Romania (2019-2022)",
+ggplot(productionByTechnology, aes(x = Technology_Production, y = Technology, fill = Technology)) +
+  geom_boxplot() +
+  scale_x_continuous(limits = c(0,105), 
+                     breaks = c(0,10,20,30,40,50,60,70,80,90,100), 
+                     expand = c(0,0)) +
+  labs(title = "Daily Electricity Production by Technology in Romania (2019-2022)",
        subtitle = "source: data.world",
-       x = "Production (MWh)",
-       y = "")
+       x = "Production (GWh)",
+       y = "") + 
+  scale_fill_viridis(discrete = TRUE) +
+  theme_minimal() +
+  theme(plot.title = element_text(size = 18, hjust=0.5),
+        plot.subtitle = element_text(size = 12, hjust=0.5),
+        axis.text.y = element_text(size = 14),
+        axis.text.x = element_text(size = 12),
+        axis.title.x = element_text(size = 16, vjust = -0.5),
+        legend.position = "none",
+        panel.grid.minor.x = element_blank(),
+        panel.grid.major.y = element_blank(),
+        panel.grid.minor.y = element_blank())
+```
+
+```{r}
+#just testing out some possibilities
+library(ggridges)
+ggplot(productionByTechnology, aes(x = Technology_Production, y = Technology, fill = Technology)) + 
+  geom_density_ridges()
 ```
 
 
