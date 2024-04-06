@@ -4,10 +4,9 @@ output: html_document
 date: '`r Sys.Date()`'
 ---
 
-```{r}
+```{r }
 #initial setup & files
-library(hrbrthemes)
-library(viridis)
+library(RColorBrewer)
 library(plyr)
 library(reshape2)
 library(tidyverse)
@@ -109,28 +108,24 @@ ggplot(productionByTechnology, aes(x = Technology_Production, y = Technology, fi
   scale_x_continuous(limits = c(0,105), 
                      breaks = c(0,10,20,30,40,50,60,70,80,90,100), 
                      expand = c(0,0)) +
-  labs(title = "Daily Electricity Production by Technology in Romania (2019-2022)",
+  labs(title = "Daily Electricity Production by Technology\n Romania (2019-2022)",
        subtitle = "source: data.world",
        x = "Production (GWh)",
        y = "") + 
-  scale_fill_viridis(discrete = TRUE) +
+  scale_fill_brewer(palette = "Set2") +
   theme_minimal() +
-  theme(plot.title = element_text(size = 18, hjust=0.5),
-        plot.subtitle = element_text(size = 12, hjust=0.5),
-        axis.text.y = element_text(size = 14),
-        axis.text.x = element_text(size = 12),
-        axis.title.x = element_text(size = 16, vjust = -0.5),
+  theme(plot.title = element_text(size = 14, hjust=0.5),
+        plot.subtitle = element_text(size = 10, hjust=0.5),
+        axis.text.y = element_text(size = 12),
+        axis.text.x = element_text(size = 10),
+        axis.title.x = element_text(size = 12, vjust = -0.5),
         legend.position = "none",
         panel.grid.minor.x = element_blank(),
         panel.grid.major.y = element_blank(),
         panel.grid.minor.y = element_blank())
-```
 
-```{r}
-#just testing out some possibilities
-library(ggridges)
-ggplot(productionByTechnology, aes(x = Technology_Production, y = Technology, fill = Technology)) + 
-  geom_density_ridges()
+#save the graph
+ggsave("outputs/graph3.jpg", width = 1920, height = 1080, units = "px")
 ```
 
 
