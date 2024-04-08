@@ -90,7 +90,8 @@ ggplot(productionByTechnology, aes(x = Technology_Production, y = Technology, fi
        subtitle = "source: data.world",
        x = "Production (GWh)",
        y = "") + 
-  scale_fill_brewer(palette = "Set2") +
+  scale_fill_manual(values=c("#66C2A5", "#FC8D62", "#A6D854", "#FFD92F",
+                             "#B3B3B3", "#E78AC3", "#8DA0CB")) +
   theme_minimal() +
   theme(plot.title = element_text(size = 14, hjust=0.5),
         plot.subtitle = element_text(size = 10, hjust=0.5),
@@ -113,7 +114,7 @@ windProductionByMonth <- romaniaElectricity %>%
   select(DateTime, Wind) %>%
   mutate(Month = format(DateTime, "%m")) %>%
   group_by(Month) %>%
-  mutate(Wind_Month_Total = median(Wind) / 1000) %>% #GWh
+  mutate(Wind_Month_Median = median(Wind) / 1000) %>% #GWh
   select(-DateTime, -Wind) %>%
   mutate(Month = factor(Month, 
                         levels = c("01", "02", "03", "04", "05", "06",
@@ -124,8 +125,9 @@ windProductionByMonth <- romaniaElectricity %>%
                                    "October", "November", "December"))) %>%
   summarise_all(mean)
 
-ggplot(windProductionByMonth, aes(x = Month, y = Wind_Month_Total)) +
-  geom_bar(stat = "identity") +
+ggplot(windProductionByMonth, aes(x = Month, y = Wind_Month_Median)) +
+  geom_bar(stat = "identity", width = 0.7, fill = "#A6D854", color = "#000000") +
+  scale_y_continuous(limits = c(0,26), breaks = c(0,5,10,15,20,25)) +
   labs(title = "Median Wind Electricity Production by Month\nRomania (2019-2022)",
        subtitle = "source: data.world",
        x = "",
@@ -133,8 +135,9 @@ ggplot(windProductionByMonth, aes(x = Month, y = Wind_Month_Total)) +
   theme_minimal() +
   theme(plot.title = element_text(size = 14, hjust=0.5),
         plot.subtitle = element_text(size = 10, hjust=0.5),
+        axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1),
         panel.grid.major.x = element_blank(),
-        panel.grid.minor.y = element_blank())
+        panel.grid.minor.y = element_blank()) +
+  geom_text(aes(label = round(Wind_Month_Median)), vjust = -0.4)
   
-
 ```
