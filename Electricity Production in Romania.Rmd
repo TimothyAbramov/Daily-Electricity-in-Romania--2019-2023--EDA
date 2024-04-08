@@ -46,18 +46,27 @@ productionByYear <- melt(productionByYear,
                          value.name = "Technology_Production") %>%
   arrange(Year)
 
-ggplot(productionByYear, aes(x = Year, y = Technology_Production, fill = Technology)) + 
+ggplot(productionByYear, aes(x = Year, y = Technology_Production,
+                             fill = fct_reorder(Technology, Technology_Production, 
+                                                .desc = TRUE))) + 
   geom_bar(stat = "identity") +
   scale_y_continuous(labels = scales::comma) +
   labs(x = "Year",
        y = "Production (GWh)",
-       title = "Electricity Production by Year\nRomania (2019-2022)",
-       subtitle = "source: data.world") +
-  scale_fill_brewer(palette = "Set2") + #take the first color of Set2
+       title = "Total Electricity Production by Year\nRomania (2019-2022)",
+       subtitle = "source: data.world",
+       fill = "Technology") +
+  scale_fill_manual(values=c("#8DA0CB", "#E78AC3", "#B3B3B3", "#FFD92F",
+                             "#A6D854", "#FC8D62", "#66C2A5")) +
   theme_minimal() +
-  theme(plot.title = element_text(hjust=0.5),
-        plot.subtitle = element_text(hjust=0.5),
-        panel.grid.major.x = element_blank())
+  theme(plot.title = element_text(size = 12, hjust=0.5),
+        plot.subtitle = element_text(size = 8, hjust=0.5),
+        panel.grid.major.x = element_blank(),
+        axis.text.y = element_text(size = 10),
+        axis.text.x = element_text(size = 10))
+
+#save the graph
+ggsave("outputs/graph1.jpg", width = 1920, height = 1080, units = "px")
 ```
 
 
@@ -93,8 +102,8 @@ ggplot(productionByTechnology, aes(x = Technology_Production, y = Technology, fi
   scale_fill_manual(values=c("#66C2A5", "#FC8D62", "#A6D854", "#FFD92F",
                              "#B3B3B3", "#E78AC3", "#8DA0CB")) +
   theme_minimal() +
-  theme(plot.title = element_text(size = 14, hjust=0.5),
-        plot.subtitle = element_text(size = 10, hjust=0.5),
+  theme(plot.title = element_text(size = 12, hjust=0.5),
+        plot.subtitle = element_text(size = 8, hjust=0.5),
         axis.text.y = element_text(size = 12),
         axis.text.x = element_text(size = 10),
         axis.title.x = element_text(size = 12, vjust = -0.5),
@@ -133,11 +142,16 @@ ggplot(windProductionByMonth, aes(x = Month, y = Wind_Month_Median)) +
        x = "",
        y = "Production (GWh)") +
   theme_minimal() +
-  theme(plot.title = element_text(size = 14, hjust=0.5),
-        plot.subtitle = element_text(size = 10, hjust=0.5),
-        axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1),
+  theme(plot.title = element_text(size = 12, hjust=0.5),
+        plot.subtitle = element_text(size = 8, hjust=0.5),
+        axis.text.x = element_text(size = 10, angle = 45, vjust = 1.2, hjust = 1.1),
+        axis.text.y = element_text(size = 10),
+        axis.title.y = element_text(size = 12, vjust = 0.5),
         panel.grid.major.x = element_blank(),
         panel.grid.minor.y = element_blank()) +
   geom_text(aes(label = round(Wind_Month_Median)), vjust = -0.4)
   
+
+#save the graph
+ggsave("outputs/graph3.jpg", width = 1920, height = 1080, units = "px")
 ```
