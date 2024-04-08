@@ -1,10 +1,10 @@
 ---
-title: "Electricity Production in Romania"
+title: "Electricity Production in Romania (2019-2022)"
 output: html_document
 date: '`r Sys.Date()`'
 ---
 
-```{r }
+```{r echo=FALSE, warning=FALSE, message=FALSE, results='hide'}
 #initial setup & files
 library(RColorBrewer)
 library(plyr)
@@ -12,61 +12,51 @@ library(reshape2)
 library(tidyverse)
 
 setwd("/Users/home/Downloads/5. Github Public Repos/Daily-Electricity-in-Romania--2019-2023--EDA")
+
 romaniaElectricity <- read.csv("datasets/daily_electricity_data.csv")
 romaniaElectricity <- romaniaElectricity %>%
   mutate(DateTime = as.Date(DateTime)) %>%
-  filter(DateTime < "2023-01-01")
-```
-
-```{r}
-#Types of potential graphs:
-#-barplot of production by year + by category(stacked)
-#-timeseries plot of net electricity production (if negative - country is importing elecricity, if positive - exporting)
-#-mean electricity production by technology type (transform the data to get categorical var)
-```
-
-```{r}
-#exploring the data a little bit
-head(romaniaElectricity)
-str(romaniaElectricity) 
-#DateTime needs to be a date var
-#also need to take individual columns with different electricity production tech into two columns: tech and production_num
+  filter(DateTime < "2023-01-01") #keeping the data exactly for 4 years (2019-2022)
 ```
 
 
+
 ```{r}
-#graph1 production by year
+#Total Production by Year
 
 productionByYear <- romaniaElectricity %>%
   mutate(Year = format(DateTime, "%Y")) %>%
   group_by(Year) %>%
-  mutate(Total_Consumption = sum(Consumption),
-    Total_Production = sum(Production),
-    Total_Nuclear = sum(Nuclear),
-    Total_Wind = sum(Wind),
-    Total_Hydroelectric = sum(Hydroelectric),
-    Total_OilAndGas = sum(Oil.and.Gas),
-    Total_Coal = sum(Coal),
-    Total_Solar = sum(Solar),
-    Total_Biomass = sum(Biomass)) %>%
-  select(Year, Total_Production,
-            Total_Nuclear, Total_Wind, Total_Hydroelectric,
-            Total_OilAndGas, Total_Coal, Total_Solar, Total_Biomass) %>%
+  mutate(Consumption = sum(Consumption),
+    Production = sum(Production),
+    Nuclear = sum(Nuclear),
+    Wind = sum(Wind),
+    Hydroelectric = sum(Hydroelectric),
+    "Oil and Gas" = sum(Oil.and.Gas),
+    Coal = sum(Coal),
+    Solar = sum(Solar),
+    Biomass = sum(Biomass)) %>%
+  select(-DateTime, -Consumption, -Oil.and.Gas) %>%
   summarise_all(mean)
 
 productionByYear <- melt(productionByYear, 
-                         id.vars = c("Year", "Total_Production"),
+                         id.vars = c("Year", "Production"),
                          variable.name = "Technology",
                          value.name = "Technology_Production") %>%
   arrange(Year)
 
-ggplot(productionByYear, aes(x = Year, y = Technology_Production, fill = Technology)) + 
+ggplot(productionByYear, aes(x = Year, y = Technology_Production / 1000, fill = Technology)) + 
   geom_bar(stat = "identity") +
+  scale_y_continuous(labels = scales::comma) +
   labs(x = "Year",
-       y = "Electricity Production (MWhrs)",
-       title = "Electricity Production in Romania (2019-2022)",
+       y = "Production (GWh)",
+       title = "Electricity Production by Year\nRomania (2019-2022)",
        subtitle = "source: data.world") +
-  theme()
+  scale_fill_brewer(palette = "Set2") + #take the first color of Set2
+  theme_minimal() +
+  theme(plot.title = element_text(hjust=0.5),
+        plot.subtitle = element_text(hjust=0.5),
+        panel.grid.major.x = element_blank())
 ```
 
 ```{r}
