@@ -36,6 +36,7 @@ productionByYear <- romaniaElectricity %>%
     Coal = sum(Coal),
     Solar = sum(Solar),
     Biomass = sum(Biomass)) %>%
+  mutate_if(is.numeric, function(x){x / 1000}) %>%
   select(-DateTime, -Consumption, -Oil.and.Gas) %>%
   summarise_all(mean)
 
@@ -45,7 +46,7 @@ productionByYear <- melt(productionByYear,
                          value.name = "Technology_Production") %>%
   arrange(Year)
 
-ggplot(productionByYear, aes(x = Year, y = Technology_Production / 1000, fill = Technology)) + 
+ggplot(productionByYear, aes(x = Year, y = Technology_Production, fill = Technology)) + 
   geom_bar(stat = "identity") +
   scale_y_continuous(labels = scales::comma) +
   labs(x = "Year",
@@ -59,23 +60,10 @@ ggplot(productionByYear, aes(x = Year, y = Technology_Production / 1000, fill = 
         panel.grid.major.x = element_blank())
 ```
 
-```{r}
-#graph2 net electricity
-netElectricity <- romaniaElectricity %>%
-  select(DateTime, Production, Consumption) %>%
-  mutate(NetProduction = Production - Consumption,
-         Exporting = NetProduction > 0) %>%
-  select(DateTime, NetProduction, Exporting) %>%
-  mutate(Exporting = factor(Exporting, levels = c("TRUE", "FALSE")))
-
-
-ggplot(netElectricity, aes(x = DateTime, y = NetProduction, color = Exporting)) + 
-  geom_col() +
-  labs(title = "Net Electricity Production in Romania (2019-2022)")
-```
 
 ```{r}
-#graph3 production by technology
+#Production by Technology Type
+
 productionByTechnology <- melt(romaniaElectricity,
                                id.vars = c("DateTime", "Consumption", "Production"),
                                variable.name = "Technology",
@@ -98,7 +86,7 @@ ggplot(productionByTechnology, aes(x = Technology_Production, y = Technology, fi
   scale_x_continuous(limits = c(0,105), 
                      breaks = c(0,10,20,30,40,50,60,70,80,90,100), 
                      expand = c(0,0)) +
-  labs(title = "Daily Electricity Production by Technology\n Romania (2019-2022)",
+  labs(title = "Daily Electricity Production by Technology Type\n Romania (2019-2022)",
        subtitle = "source: data.world",
        x = "Production (GWh)",
        y = "") + 
@@ -115,7 +103,38 @@ ggplot(productionByTechnology, aes(x = Technology_Production, y = Technology, fi
         panel.grid.minor.y = element_blank())
 
 #save the graph
-ggsave("outputs/graph3.jpg", width = 1920, height = 1080, units = "px")
+ggsave("outputs/graph2.jpg", width = 1920, height = 1080, units = "px")
 ```
 
+```{r}
+#Wind Production by Month
 
+windProductionByMonth <- romaniaElectricity %>%
+  select(DateTime, Wind) %>%
+  mutate(Month = format(DateTime, "%m")) %>%
+  group_by(Month) %>%
+  mutate(Wind_Month_Total = median(Wind) / 1000) %>% #GWh
+  select(-DateTime, -Wind) %>%
+  mutate(Month = factor(Month, 
+                        levels = c("01", "02", "03", "04", "05", "06",
+                                   "07", "08", "09", "10", "11", "12"),
+                        labels = c("January", "February", "March",
+                                   "April", "May", "June",
+                                   "July", "August", "September",
+                                   "October", "November", "December"))) %>%
+  summarise_all(mean)
+
+ggplot(windProductionByMonth, aes(x = Month, y = Wind_Month_Total)) +
+  geom_bar(stat = "identity") +
+  labs(title = "Median Wind Electricity Production by Month\nRomania (2019-2022)",
+       subtitle = "source: data.world",
+       x = "",
+       y = "Production (GWh)") +
+  theme_minimal() +
+  theme(plot.title = element_text(size = 14, hjust=0.5),
+        plot.subtitle = element_text(size = 10, hjust=0.5),
+        panel.grid.major.x = element_blank(),
+        panel.grid.minor.y = element_blank())
+  
+
+```
