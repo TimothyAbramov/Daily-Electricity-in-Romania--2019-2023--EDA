@@ -1,4 +1,4 @@
-Explorationg of Electricity Production in Romania, for years 2019-2022.
+Exploration of Electricity Production in Romania, for years 2019-2022.
 
 Dataset used includes daily Production and Consumption figures in GWh. Production is split by Technology Type in the dataset.
 
